@@ -1,2 +1,39 @@
-<h1>Posts#index</h1>
-<p>Find me in app/views/posts/index.html.erb</p>
+<div class="container">
+  <div class="row">
+    <div class="col s12 m4">
+      <div class="card">
+        <div class="card-image">
+          <img src="<%= current_user.avatar.url %>"/>
+        </div>
+        <div class="card-content">
+          <div class="card-title"><%= current_user.name %></div>
+          <p>Email : <%= current_user.email %></p>
+          <p>Posts : <%= @posts_count %></p>
+          <p>Follower : <%= current_user.followers.count %></p>
+          <p>Following : <%= current_user.followings.count %></p>
+          <% current_user.followings.each do |following| %>
+            <p><%= following.name %></p>
+          <% end %>
+          <div class="card-action">
+            <%= link_to new_post_path do %>
+              <button class="waves-effect waves-light btn">Write</button>
+            <% end %>
+          </div>
+        </div>
+        <div id="messages">
+          <%= render @messages %>
+        </div>
+        <form>
+          <hr>
+          <labe>Say something:</label><br>
+          <input type="text" data-behavior="chat_speaker">
+        </form>
+      </div>
+    </div>
+    <div class="col s12 m8">
+      <% @posts.each do |post| %>
+        <%= render partial: "post", object: post %>
+      <% end %>
+    </div>
+  </div>
+</div>

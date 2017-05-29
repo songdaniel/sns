@@ -1,0 +1,73 @@
+<div class="card post">
+  <div class="card-content">
+    <% if post.user.avatar %>
+      <img src="<%= post.user.avatar.thumb.url %>" class="circle thumbnail">
+    <% end %>
+    <span class="card_title"><%= post.user.name %></span>
+    <span><%= post.created_at %></span>
+    <div class="content">
+      <% if user_signed_in? && current_user != post.user %>
+        <% if current_user.followings.include?(post.user) %>
+          <%= form_tag follow_path(post.user.id), method: "delete" , class: "right" do %>
+            <button class="btn">Unfollow</button>
+          <% end %>
+        <% else %>
+          <%= form_tag follows_path, method: "post", class: "right" do %>
+            <input type="hidden" name="followed_id" value="<%= post.user.id %>">
+            <button class="btn">Follow</button>
+          <% end %>
+        <% end %>
+      <% end %>
+      <div class="card-image">
+        <% if post.image.url %>
+          <img src="<%= post.image.url %>">
+        <% end %>
+      </div>
+      <p class="pre-line"><%= post.content %></p>
+    </div>
+  </div>
+
+  <div class="card-action">
+    <%= post.likes.size %>
+      <% if post.likes.size > 1 %>
+        Likes
+      <% elsif post.likes.size == 1 %>
+        Like
+      <% end %>
+
+      <% if current_user.is_like?(post) %>
+        <%= link_to "cancle", post_like_path(post), method: "post" %>
+      <% else %>
+        <%= link_to "like", post_like_path(post), method: "post" %>
+      <% end %>
+
+      <% if current_user.id == post.user_id %>
+      <%= link_to "Delete", post_path(post), method: "delete", class: "right" %>
+      <%= link_to "Edit", edit_post_path(post), class: "right" %>
+      <% end %>
+
+    <%= form_tag post_comments_path(post) do %>
+      <div class="input-field">
+        <%= text_area_tag :content, nil, class: "materialize-textarea", data:{length: '120'}, placeholder: "input the reply", required: true %>
+      </div>
+      <div class="input-field">
+        <%= button_tag "reply", class: "btn" %>
+      </div>
+    <% end %>
+    <% if post.comments.present? %>
+      <ul class="collection">
+        <% post.comments.each do |comment| %>
+          <li class="collection-item">
+            <span class="title"><%= comment.user.name %></span>
+            <span class="right"><%= comment.created_at %></span>
+            <p class="pre-line"><%= comment.content %></p>
+            <% if comment.user.id == current_user.id %>
+              <div><%= link_to "delete", post_comment_path(post, comment), method: "delete" %></div>
+            <% end %>
+          </li>
+        <% end %>
+      </ul>
+    <% end %>
+
+  </div>
+</div>

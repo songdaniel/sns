@@ -1,0 +1,21 @@
+<div class="container">
+  <div class="row">
+    <div class="card col s12">
+      <div class="card-content">
+        <div class="card-title">Contents</div>
+        <%= form_tag posts_path, multipart: true do %>
+          <div class="input-field">
+            <%= file_field_tag :image %>
+          </div>
+
+          <div class="input-field">
+            <%= text_area_tag :content, nil, id:"textarea1", class: "materialize-textarea", placeholder: "what do you think?", 'data-length' => "120"  %>
+          </div>
+          <div class="input-field">
+            <%= button_tag "Write", class: "btn" %>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>
